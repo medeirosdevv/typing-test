@@ -42,9 +42,24 @@ body {
 }
 
 .word-display span {
-  color: #ff6347; /* Tomato color for incorrect characters */
+  color: #ff6347; 
 }
 
 .hidden {
   display: none;
+}
+
+.btn {
+  background-color: orange;
+  border: none;
+  width: 15vh;
+  height: 10vh;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+}
+
+.btn:hover{
+  background-color: yellow;
+  cursor: pointer;
 }

@@ -37,6 +37,7 @@ function formatWord(word, typedText) {
   let formattedWord = '';
   for (let i = 0; i < word.length; i++) {
       if (i < typedText.length && word[i] !== typedText[i]) {
+          incorrectCharacterCount++;
           formattedWord += `<span class="incorrect">${word[i]}</span>`;
       } else {
           formattedWord += word[i];
@@ -65,7 +66,7 @@ function endGame() {
 function calculateAndDisplayResults() {
   const totalCharactersTyped = characterCount + incorrectCharacterCount;
   const wpm = (correctWordCount / (30 / 60)); 
-  const accuracy = (characterCount / totalCharactersTyped) * 100;
+  const accuracy = ((totalCharactersTyped - incorrectCharacterCount) / totalCharactersTyped) * 100;
 
   document.querySelector('.container').classList.add('hidden');
 
@@ -75,22 +76,22 @@ function calculateAndDisplayResults() {
           <div>WPM</div>
       </div>
       <div>
-          <div class="stat">${Math.round(accuracy)}%</div>
-          <div>Accuracy</div>
+          <div class="stat">${Math.round(accuracy)?Math.round(accuracy):0}%</div>
+          <div>ACC</div>
       </div>
       <div>
-          <div>${correctWordCount + incorrectWordCount}</div>
-          <div>Wrong words</div>
+          <div>${incorrectCharacterCount}</div>
+          <div>Wrong characters</div>
       </div>
       <div>
-          <div>${correctWordCount}</div>
-          <div>Correct words</div>
+          <div>${totalCharactersTyped - incorrectCharacterCount}</div>
+          <div>Correct characters</div>
       </div>
       <div>
           <div>${characterCount}</div>
           <div>Characters</div>
       </div>
-      <button id="restart-button">Restart</button>
+      <button id="restart-button" class="btn">Restart</button>
   `;
 
   document.getElementById('restart-button').addEventListener('click', restartGame);
@@ -116,7 +117,7 @@ function restartGame() {
   displayNextWord();
 }
 
-inputArea.addEventListener('input', () => {
+inputArea.addEventListener('keyup', () => {
   if (!testStarted) {
       testStarted = true;
       startTimer();
@@ -134,11 +135,11 @@ inputArea.addEventListener('input', () => {
       displayNextWord();
   } else if (typedText.endsWith(' ')) {
       incorrectWordCount++;
-      inputArea.value = ''; // Clear the input area after incorrect word
+      inputArea.value = ''; 
   }
 });
 
 window.onload = () => {
-  shuffledWords = shuffleWords([...words]); // Shuffle the words array on load
+  shuffledWords = shuffleWords([...words]); 
   displayNextWord();
 };
