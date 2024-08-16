@@ -30,6 +30,10 @@ body {
   background-color: grey;
 }
 
+.input-area:focus{
+  outline: none;
+}
+
 .result {
   margin-top: 20px;
   font-size: 1.2em;

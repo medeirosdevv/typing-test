@@ -13,6 +13,7 @@ let incorrectCharacterCount = 0;
 let timer;
 let timeLeft = 30;
 let testStarted = false;
+let timeLost = 0;
 
 const wordDisplay = document.getElementById('word-display');
 const inputArea = document.getElementById('input-area');
@@ -21,8 +22,8 @@ const resultDisplay = document.getElementById('result');
 
 function shuffleWords(array) {
   for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
@@ -33,28 +34,51 @@ function displayNextWord() {
   inputArea.focus();
 }
 
+
+function decrease_time(){
+  if(timeLeft > 0 && timeLeft < 30)
+  {
+    timeScope = 30 - timeLeft;
+    timeRemaining = 30 - timeScope;
+
+    if(timeRemaining == 2){
+      timeLeft = 0;
+      timeLost+= 2;
+    }
+
+    if(timeRemaining > 2){
+      timeLost+= 2;
+      timeLeft--;
+    }
+  }
+}
+
 function formatWord(word, typedText) {
   let formattedWord = '';
   for (let i = 0; i < word.length; i++) {
-      if (i < typedText.length && word[i] !== typedText[i]) {
-          incorrectCharacterCount++;
-          formattedWord += `<span class="incorrect">${word[i]}</span>`;
-      } else {
-          formattedWord += word[i];
-      }
+    if (i < typedText.length && word[i] !== typedText[i]) {
+      decrease_time();
+      incorrectCharacterCount++;
+      formattedWord += `<span class="incorrect">${word[i]}</span>`;
+    } else {
+      formattedWord += word[i];
+    }
   }
   return formattedWord;
 }
 
 function startTimer() {
+  timeLeft--;
+  timerDisplay.textContent = `Time left: ${timeLeft}s`;
+  
   timer = setInterval(() => {
-      timeLeft--;
-      timerDisplay.textContent = `Time left: ${timeLeft}s`;
+    timeLeft--;
+    timerDisplay.textContent = `Time left: ${timeLeft}s`;
 
-      if (timeLeft <= 0) {
-          clearInterval(timer);
-          endGame();
-      }
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endGame();
+    }
   }, 1000);
 }
 
@@ -65,8 +89,9 @@ function endGame() {
 
 function calculateAndDisplayResults() {
   const totalCharactersTyped = characterCount + incorrectCharacterCount;
-  const wpm = (correctWordCount / (30 / 60)); 
-  const accuracy = ((totalCharactersTyped - incorrectCharacterCount) / totalCharactersTyped) * 100;
+  const wpm = (correctWordCount / (30 / 60));
+  const accuracy = (characterCount - incorrectCharacterCount) / characterCount * 100;
+
 
   document.querySelector('.container').classList.add('hidden');
 
@@ -76,15 +101,19 @@ function calculateAndDisplayResults() {
           <div>WPM</div>
       </div>
       <div>
-          <div class="stat">${Math.round(accuracy)?Math.round(accuracy):0}%</div>
+          <div class="stat">${Math.round(accuracy) ? Math.round(accuracy) : 0}%</div>
           <div>ACC</div>
+      </div>
+      <div>
+          <div class="stat">${timeLost}</div>
+          <div>Lost seconds</div>
       </div>
       <div>
           <div>${incorrectCharacterCount}</div>
           <div>Wrong characters</div>
       </div>
       <div>
-          <div>${totalCharactersTyped - incorrectCharacterCount}</div>
+          <div>${characterCount - incorrectCharacterCount}</div>
           <div>Correct characters</div>
       </div>
       <div>
@@ -115,12 +144,14 @@ function restartGame() {
 
   shuffledWords = shuffleWords([...words]);
   displayNextWord();
+
+  timerDisplay.textContent = `Time left: ${timeLeft}s`;
 }
 
 inputArea.addEventListener('keyup', () => {
   if (!testStarted) {
-      testStarted = true;
-      startTimer();
+    testStarted = true;
+    startTimer();
   }
 
   const typedText = inputArea.value;
@@ -129,17 +160,17 @@ inputArea.addEventListener('keyup', () => {
   wordDisplay.innerHTML = formatWord(currentWord, typedText);
 
   if (typedText.trim() === currentWord) {
-      correctWordCount++;
-      characterCount += typedText.length;
-      currentWordIndex = (currentWordIndex + 1) % shuffledWords.length;
-      displayNextWord();
+    correctWordCount++;
+    characterCount += typedText.length;
+    currentWordIndex = (currentWordIndex + 1) % shuffledWords.length;
+    displayNextWord();
   } else if (typedText.endsWith(' ')) {
-      incorrectWordCount++;
-      inputArea.value = ''; 
+    incorrectWordCount++;
+    inputArea.value = '';
   }
 });
 
 window.onload = () => {
-  shuffledWords = shuffleWords([...words]); 
+  shuffledWords = shuffleWords([...words]);
   displayNextWord();
 };
