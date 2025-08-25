@@ -7,15 +7,54 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Ícone de engrenagem -->
+    <button id="btn-settings" class="settings-btn" title="Configurações">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" stroke="#ffb347" stroke-width="2"/>
+            <path d="M19.4 15A1.65 1.65 0 0 0 21 13.35V10.65A1.65 1.65 0 0 0 19.4 9L18.13 7.13A1.65 1.65 0 0 0 16.87 5.87L15 4.6A1.65 1.65 0 0 0 13.35 3H10.65A1.65 1.65 0 0 0 9 4.6L7.13 5.87A1.65 1.65 0 0 0 5.87 7.13L4.6 9A1.65 1.65 0 0 0 3 10.65V13.35A1.65 1.65 0 0 0 4.6 15L5.87 16.87A1.65 1.65 0 0 0 7.13 18.13L9 19.4A1.65 1.65 0 0 0 10.65 21h2.7A1.65 1.65 0 0 0 15 19.4l1.87-1.27A1.65 1.65 0 0 0 18.13 16.87L19.4 15Z" stroke="#ffb347" stroke-width="2"/>
+        </svg>
+    </button>
+
+    <!-- Modal de configurações -->
+    <div id="settings-modal" class="settings-modal hidden">
+        <div class="settings-content">
+            <h2>Settings</h2>
+            <label for="difficulty-select-modal" style="font-size:1.1em; color:#ffb347; margin-bottom:10px; display:block;">Difficulty:</label>
+            <select id="difficulty-select-modal" class="dropdown">
+                <option value="facil">Easy</option>
+                <option value="medio">Medium</option>
+                <option value="dificil">Hard</option>
+            </select>
+            <br/>
+            <button id="btn-close-settings" class="btn" style="margin-top:18px;">Close</button>
+        </div>
+    </div>
+
+    <!-- MENU INICIAL -->
+    <div id="menu" class="container">
         <h1>Typing Test</h1>
+        <h2>Choose a game mode</h2>
+        <button id="btn-classic" class="btn">Classic</button>
+        <button id="btn-raining" class="btn">Raining</button>
+    </div>
+
+    <!-- CLASSIC MODE -->
+    <div id="classic-container" class="container hidden">
+        <h1>Typing Test - Classic</h1>
         <h2>Type any key to start</h2>
         <div id="timer">Time left: 30s</div>
         <div id="word-display" class="word-display"></div>
         <input type="text" id="input-area" class="input-area">
-      </div>
-      <div id="result" class="result">
-      </div>
-    <script src="script/script.js"></script>
+    </div>
+    <div id="result" class="result"></div>
+
+    <!-- RAINING MODE (placeholder) -->
+    <div id="raining-container" class="container hidden">
+        <h1>Typing Test - Raining</h1>
+        <p>Modo "Raining" em breve!</p>
+        <button id="btn-voltar-menu" class="btn">Voltar ao menu</button>
+    </div>
+
+    <script type="module" src="script/script.js"></script>
 </body>
 </html>
